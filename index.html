@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduBuddy AI — Career Pathfinder</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:#ffffff; --off:#f7f8fa; --surface:#f0f2f5;
+  --border:#dde1e8; --border2:#c8cdd8;
+  --t900:#0f1623; --t700:#2d3748; --t500:#64748b; --t300:#94a3b8;
+  --blue:#2563eb; --blue-lt:#3b82f6; --blue-bg:#eff6ff; --blue-mid:#dbeafe;
+  --cyan:#0891b2; --cyan-lt:#06b6d4;
+  --green:#059669; --green-bg:#ecfdf5;
+  --amber:#d97706; --amber-bg:#fffbeb;
+  --sh-sm:0 1px 3px rgba(15,22,35,.07),0 1px 2px rgba(15,22,35,.04);
+  --sh-md:0 4px 12px rgba(15,22,35,.09),0 2px 4px rgba(15,22,35,.04);
+  --sh-lg:0 12px 32px rgba(15,22,35,.1),0 4px 8px rgba(15,22,35,.05);
+  --sh-bl:0 4px 18px rgba(37,99,235,.25);
+  --r:8px; --rl:14px; --tr:.22s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--off);color:var(--t900);font-family:'Geist',sans-serif;font-weight:400;line-height:1.6;overflow-x:hidden;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#c8d0de 1px,transparent 1px);background-size:28px 28px;opacity:.3;pointer-events:none;z-index:0}
+
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5%;height:60px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh-sm)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-lm{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--cyan-lt));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;font-family:'Geist Mono',monospace;box-shadow:var(--sh-bl);flex-shrink:0}
+.nav-name{font-size:1rem;font-weight:600;color:var(--t900);letter-spacing:-.02em}
+.nav-name span{color:var(--blue)}
+.nav-pill{font-family:'Geist Mono',monospace;font-size:.68rem;letter-spacing:.04em;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-mid);padding:4px 12px;border-radius:20px}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{font-size:.84rem;color:var(--t500);padding:6px 12px;border-radius:var(--r);cursor:pointer;transition:all var(--tr);text-decoration:none}
+.nav-link:hover{color:var(--t900);background:var(--surface)}
+.btn-nav{font-size:.82rem;font-weight:500;background:var(--blue);color:#fff;border:none;padding:7px 18px;border-radius:var(--r);cursor:pointer;transition:all var(--tr);box-shadow:var(--sh-bl)}
+.btn-nav:hover{background:#1d4ed8;transform:translateY(-1px)}
+
+.page{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 5%}
+
+.hero{padding:52px 0 44px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);background:var(--blue-bg);border:1px solid var(--blue-mid);padding:4px 12px;border-radius:20px;margin-bottom:16px}
+.ey-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:pdot 2s infinite}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.4)}50%{box-shadow:0 0 0 5px rgba(37,99,235,0)}}
+.hero h1{font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3.1rem);line-height:1.15;color:var(--t900);letter-spacing:-.01em;margin-bottom:14px}
+.hero h1 em{font-style:italic;background:linear-gradient(90deg,var(--blue),var(--cyan-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--t500);font-size:.98rem;max-width:440px;line-height:1.7;margin-bottom:26px}
+.hero-stats{display:flex;gap:16px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;padding:11px 16px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-sm)}
+.stat-n{font-family:'Instrument Serif',serif;font-size:1.45rem;color:var(--blue);line-height:1}
+.stat-l{font-size:.72rem;color:var(--t500)}
+
+.hero-vis{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--sh-lg);padding:22px;overflow:hidden;position:relative}
+.hero-vis::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--cyan-lt))}
+.mini-phases{display:flex;flex-direction:column;gap:6px}
+.mini-p{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);background:var(--off);border:1px solid var(--border);font-size:.83rem;color:var(--t700);transition:all var(--tr)}
+.mini-p.ap{background:var(--blue-bg);border-color:var(--blue-mid);color:var(--blue)}
+.mini-p-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.8rem;background:var(--surface);flex-shrink:0}
+.mini-p.ap .mini-p-icon{background:var(--blue)}
+.mini-p-name{font-weight:500;font-size:.8rem}
+.mini-p-arr{margin-left:auto;color:var(--t300);font-size:.7rem}
+.mini-p.ap .mini-p-arr{color:var(--blue)}
+.mini-conn{width:2px;height:6px;background:var(--border);margin-left:21px;border-radius:1px}
+.mini-conn.ap{background:var(--blue)}
+
+.map-sec{padding:36px 0;background:var(--white);border-radius:var(--rl);border:1px solid var(--border);box-shadow:var(--sh-md);margin-bottom:28px}
+.map-inner{padding:0 28px}
+.sec-lbl{font-family:'Geist Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--t300);margin-bottom:4px}
+.sec-title{font-family:'Instrument Serif',serif;font-size:1.55rem;color:var(--t900);letter-spacing:-.01em;margin-bottom:4px}
+.sec-sub{color:var(--t500);font-size:.88rem;margin-bottom:28px}
+
+.node-map{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:6px}
+.node-item{display:flex;flex-direction:column;align-items:center;min-width:120px;flex:1;cursor:default}
+.node-conn{flex:1;display:flex;align-items:center;padding-top:20px;min-width:16px}
+.nline{flex:1;height:2px;background:var(--border2);position:relative;overflow:hidden;transition:background var(--tr)}
+.nline.done{background:var(--blue)}
+.nline.done::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shim 2s infinite}
+@keyframes shim{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.nc{width:42px;height:42px;border-radius:50%;border:2px solid var(--border2);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:.95rem;position:relative;transition:all var(--tr);box-shadow:var(--sh-sm);flex-shrink:0}
+.nc.active{border-color:var(--blue);background:var(--blue-bg);box-shadow:0 0 0 4px rgba(37,99,235,.12),var(--sh-bl);animation:npulse 2.5s ease-in-out infinite}
+.nc.done{border-color:var(--blue);background:var(--blue);color:#fff}
+.nc.locked{opacity:.38}
+@keyframes npulse{0%,100%{box-shadow:0 0 0 4px rgba(37,99,235,.12),var(--sh-bl)}50%{box-shadow:0 0 0 8px rgba(37,99,235,.05),var(--sh-bl)}}
+.nlbl{margin-top:8px;text-align:center;font-size:.76rem;font-weight:500;color:var(--t500);max-width:105px;line-height:1.3}
+.nlbl.active{color:var(--blue);font-weight:600}
+.nlbl.done{color:var(--t700)}
+.nphase{font-family:'Geist Mono',monospace;font-size:.58rem;color:var(--t300);margin-top:2px}
+
+.phases-wrap{display:flex;flex-direction:column;gap:18px;margin-bottom:28px}
+.pp{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--sh-sm);overflow:hidden;opacity:.42;pointer-events:none;transform:translateY(6px);transition:all var(--tr)}
+.pp.unlocked{opacity:1;pointer-events:all;transform:none;box-shadow:var(--sh-md)}
+.pp.completed{border-color:#bfdbfe}
+.pp.ap{border-color:var(--blue);box-shadow:0 0 0 2px rgba(37,99,235,.14),var(--sh-md)}
+.ph-hdr{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--border);background:var(--off)}
+.ph-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:var(--white);border:1px solid var(--border);box-shadow:var(--sh-sm);flex-shrink:0}
+.pp.ap .ph-icon{background:var(--blue);border-color:var(--blue)}
+.ph-tag{font-family:'Geist Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t300);margin-bottom:2px}
+.pp.ap .ph-tag{color:var(--blue)}
+.ph-tit{font-size:.98rem;font-weight:600;color:var(--t900)}
+.ph-chk{margin-left:auto;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.68rem;color:var(--green);opacity:0;transition:opacity .35s;flex-shrink:0}
+.pp.completed .ph-chk{opacity:1;border-color:var(--green);background:var(--green-bg)}
+.ph-body{padding:22px}
+
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:18px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fl{font-size:.77rem;font-weight:500;color:var(--t700)}
+.fsel,.finp{background:var(--white);border:1.5px solid var(--border);color:var(--t900);font-family:'Geist',sans-serif;font-size:.88rem;padding:10px 14px;border-radius:var(--r);outline:none;width:100%;transition:all var(--tr);appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - 12px) center;padding-right:32px}
+.finp{background-image:none;padding-right:14px}
+.fsel:focus,.finp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.fsel option{background:#fff;color:var(--t900)}
+.marks-wrap{display:flex;align-items:center;gap:10px}
+.mbadge{padding:9px 14px;border-radius:var(--r);background:var(--blue-bg);border:1.5px solid var(--blue-mid);font-family:'Instrument Serif',serif;font-size:1.35rem;color:var(--blue);min-width:68px;text-align:center;line-height:1}
+
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:'Geist',sans-serif;font-size:.86rem;font-weight:500;border:none;border-radius:var(--r);cursor:pointer;padding:10px 22px;transition:all var(--tr)}
+.btn-pr{background:var(--blue);color:#fff;box-shadow:var(--sh-bl)}
+.btn-pr:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 6px 22px rgba(37,99,235,.35)}
+.btn-cy{background:var(--cyan);color:#fff;box-shadow:0 4px 14px rgba(8,145,178,.25)}
+.btn-cy:hover{background:#0e7490;transform:translateY(-1px)}
+.btn-se{background:var(--white);color:var(--t700);border:1.5px solid var(--border);box-shadow:var(--sh-sm)}
+.btn-se:hover{border-color:var(--border2);background:var(--off)}
+.btn-sm{padding:6px 14px;font-size:.78rem}
+.bic{font-size:.95rem}
+.flex-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.cslbl{font-size:.76rem;font-weight:600;color:var(--t500);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.cslbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:11px;margin-bottom:6px}
+.cc{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:15px;cursor:pointer;position:relative;overflow:hidden;transition:all var(--tr)}
+.cc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan-lt));opacity:0;transition:opacity var(--tr)}
+.cc:hover{border-color:var(--blue-mid);box-shadow:var(--sh-md);transform:translateY(-2px)}
+.cc:hover::before{opacity:1}
+.cc.sel{border-color:var(--blue);background:var(--blue-bg);box-shadow:0 0 0 3px rgba(37,99,235,.12),var(--sh-md)}
+.cc.sel::before{opacity:1}
+.cc-ico{font-size:1.5rem;margin-bottom:8px;line-height:1}
+.cc-nm{font-size:.88rem;font-weight:600;color:var(--t900);margin-bottom:3px;line-height:1.3}
+.cc-mt{font-size:.74rem;color:var(--t500);margin-bottom:7px}
+.cbadge{display:inline-block;font-size:.62rem;font-weight:500;padding:2px 7px;border-radius:10px;border:1px solid}
+.b-hot{color:#b45309;background:#fef3c7;border-color:#fde68a}
+.b-tr{color:#047857;background:#d1fae5;border-color:#6ee7b7}
+.b-nw{color:var(--blue);background:var(--blue-bg);border-color:var(--blue-mid)}
+.b-br{color:#7c3aed;background:#ede9fe;border-color:#c4b5fd}
+
+.bridge-panel{background:linear-gradient(135deg,#ede9fe,#dbeafe);border:1.5px solid #c4b5fd;border-radius:var(--r);padding:15px 18px;margin-bottom:18px;display:none}
+.bridge-panel.show{display:block}
+.bridge-hdr{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.bridge-ico{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#7c3aed,var(--blue));display:flex;align-items:center;justify-content:center;font-size:.85rem;color:#fff;flex-shrink:0}
+.bridge-ttl{font-size:.88rem;font-weight:600;color:#5b21b6}
+.bridge-sub{font-size:.76rem;color:#7c3aed;margin-top:1px}
+
+.budget-tool{background:var(--off);border:1px solid var(--border);border-radius:var(--r);padding:15px 18px;margin-top:18px}
+.budget-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.budget-ttl{font-size:.86rem;font-weight:600;color:var(--t900)}
+.budget-disp{font-family:'Instrument Serif',serif;font-size:1.4rem;color:var(--blue)}
+.budget-range{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;outline:none;cursor:pointer;background:linear-gradient(90deg,var(--blue) 0%,var(--blue) 15%,var(--border2) 15%,var(--border2) 100%);margin-bottom:5px}
+.budget-range::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--blue);border:2.5px solid #fff;box-shadow:var(--sh-bl);cursor:pointer}
+.budget-marks{display:flex;justify-content:space-between;font-size:.68rem;color:var(--t300);font-family:'Geist Mono',monospace}
+.tl-row{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap}
+.tl-step{flex:1;min-width:105px;padding:9px 11px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:flex-start;gap:7px;font-size:.78rem}
+.tl-n{width:19px;height:19px;border-radius:50%;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-mid);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:600;flex-shrink:0;margin-top:1px}
+.tl-tx{color:var(--t700);line-height:1.4}
+.tl-dur{font-size:.68rem;color:var(--t300);margin-top:1px}
+
+.chart-meta{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap}
+.chart-for{font-size:.8rem;color:var(--t500)}
+.chart-chip{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-mid);padding:3px 11px;border-radius:20px;font-size:.78rem;font-weight:500}
+.sort-ctrls{margin-left:auto;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.sort-lbl{font-size:.73rem;color:var(--t500)}
+.sb{font-size:.7rem;padding:3px 9px;border-radius:14px;border:1px solid var(--border);background:var(--white);color:var(--t500);cursor:pointer;transition:all var(--tr)}
+.sb:hover{border-color:var(--blue-mid);color:var(--blue)}
+.sb.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border)}
+table.ct{width:100%;border-collapse:collapse;font-size:.845rem}
+.ct thead th{padding:10px 13px;text-align:left;font-size:.69rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--t500);background:var(--off);border-bottom:1px solid var(--border);white-space:nowrap}
+.ct tbody tr{border-bottom:1px solid var(--border);transition:background var(--tr)}
+.ct tbody tr:last-child{border-bottom:none}
+.ct tbody tr:hover{background:var(--blue-bg)}
+.ct tbody tr.br{background:#f0fdf4}
+.ct tbody tr.br:hover{background:#dcfce7}
+.ct tbody td{padding:11px 13px;vertical-align:middle;color:var(--t700)}
+.in-nm{font-weight:600;color:var(--t900);font-size:.88rem}
+.in-loc{font-size:.72rem;color:var(--t300);margin-top:2px}
+.best-chp{font-size:.6rem;font-weight:500;padding:1px 6px;background:#dcfce7;color:#15803d;border:1px solid #86efac;border-radius:9px;margin-left:5px;vertical-align:middle}
+.fee-v{font-weight:600;color:var(--t900)}
+.fee-s{font-size:.7rem;color:var(--t300);margin-top:1px}
+.star-row{display:flex;align-items:center;gap:4px}
+.stars{color:#f59e0b;font-size:.72rem;letter-spacing:1px}
+.rv{font-size:.76rem;font-weight:600;color:var(--t700)}
+.plw{display:flex;align-items:center;gap:7px}
+.plt{flex:1;height:4px;border-radius:2px;background:var(--surface);overflow:hidden;min-width:44px}
+.plf{height:100%;border-radius:2px;background:var(--blue)}
+.plv{font-size:.76rem;font-weight:600;color:var(--t700);white-space:nowrap}
+.fb-cell{font-size:.78rem;color:var(--t500);font-style:italic;max-width:155px}
+.campus-chip{display:inline-block;font-size:.66rem;padding:2px 7px;border-radius:9px;border:1px solid var(--border);color:var(--t500);white-space:nowrap}
+
+.ai-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+.ai-mod{background:var(--off);border:1.5px dashed var(--border);border-radius:var(--r);padding:18px;text-align:center}
+.ai-ico{font-size:1.9rem;margin-bottom:9px}
+.ai-tit{font-size:.88rem;font-weight:600;color:var(--t700);margin-bottom:5px}
+.ai-desc{font-size:.78rem;color:var(--t500);line-height:1.5;margin-bottom:11px}
+.ai-soon{display:inline-block;font-size:.63rem;padding:2px 9px;border-radius:10px;background:var(--amber-bg);color:var(--amber);border:1px solid #fde68a;font-weight:500}
+
+footer{position:relative;z-index:1;border-top:1px solid var(--border);background:var(--white);padding:22px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ft-brand{display:flex;align-items:center;gap:8px}
+.ft-nm{font-size:.88rem;font-weight:600;color:var(--t900)}
+.ft-nm span{color:var(--blue)}
+.ft-copy{font-size:.72rem;color:var(--t300);font-family:'Geist Mono',monospace}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.aup{animation:fadeUp .35s ease both}
+.hidden{display:none !important}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+
+@media(max-width:800px){.hero{grid-template-columns:1fr}.hero-vis{display:none}.nav-links{display:none}.ct thead th:nth-child(5),.ct tbody td:nth-child(5){display:none}}
+@media(max-width:520px){.ct thead th:nth-child(4),.ct tbody td:nth-child(4){display:none}.map-inner{padding:0 14px}.ph-body{padding:16px}footer{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">
+    <div class="nav-lm">EB</div>
+    <div class="nav-name">Edu<span>Buddy</span> AI</div>
+  </div>
+  <div class="nav-links">
+    <a class="nav-link" href="#pathfinder">Pathfinder</a>
+    <a class="nav-link" href="#phase2">Courses</a>
+    <a class="nav-link" href="#phase3">Colleges</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="nav-pill">Beta</div>
+    <button class="btn-nav">Get Started Free</button>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow"><span class="ey-dot"></span>AI-Powered Career Navigation</div>
+      <h1>Find Your<br><em>Perfect Career Path.</em></h1>
+      <p class="hero-sub">EduBuddy AI maps your academic profile to the right courses, colleges, and career milestones — with smart recommendations that evolve as you do.</p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-n">12K+</span><span class="stat-l">Students Guided</span></div>
+        <div class="stat"><span class="stat-n">340+</span><span class="stat-l">Career Paths</span></div>
+        <div class="stat"><span class="stat-n">94%</span><span class="stat-l">Placement Rate</span></div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div style="font-size:.7rem;font-weight:600;color:var(--t300);text-transform:uppercase;letter-spacing:.08em;margin-bottom:11px">Your 5-Phase Journey</div>
+      <div class="mini-phases">
+        <div class="mini-p ap"><div class="mini-p-icon">🔍</div><div><div class="mini-p-name">Discovery</div><div style="font-size:.7rem;color:var(--blue)">Your academic profile</div></div><div class="mini-p-arr">→</div></div>
+        <div class="mini-conn ap"></div>
+        <div class="mini-p" style="opacity:.7"><div class="mini-p-icon">🗺️</div><div><div class="mini-p-name">Planning</div><div style="font-size:.7rem;color:var(--t300)">Smart recommendations</div></div><div class="mini-p-arr">→</div></div>
+        <div class="mini-conn"></div>
+        <div class="mini-p" style="opacity:.55"><div class="mini-p-icon">🏛️</div><div><div class="mini-p-name">Enrollment</div><div style="font-size:.7rem;color:var(--t300)">Compare colleges</div></div><div class="mini-p-arr">→</div></div>
+        <div class="mini-conn"></div>
+        <div class="mini-p" style="opacity:.38"><div class="mini-p-icon">📚</div><div><div class="mini-p-name">Learning</div><div style="font-size:.7rem;color:var(--t300)">AI Study Buddy</div></div><div class="mini-p-arr">→</div></div>
+        <div class="mini-conn"></div>
+        <div class="mini-p" style="opacity:.24"><div class="mini-p-icon">🚀</div><div><div class="mini-p-name">Success</div><div style="font-size:.7rem;color:var(--t300)">Career launchpad</div></div><div class="mini-p-arr" style="opacity:0">→</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="pathfinder">
+  <div class="map-sec">
+    <div class="map-inner">
+      <div class="sec-lbl">Your Journey</div>
+      <div class="sec-title">The Pathfinder Map</div>
+      <p class="sec-sub">Complete each phase to unlock the next. Your path builds as you go.</p>
+      <div class="node-map">
+        <div class="node-item"><div class="nc active" id="nd1">🔍</div><div class="nlbl active" id="nl1">Discovery<div class="nphase">Phase 01</div></div></div>
+        <div class="node-conn"><div class="nline" id="nln1"></div></div>
+        <div class="node-item"><div class="nc locked" id="nd2">🗺️</div><div class="nlbl" id="nl2">Planning<div class="nphase">Phase 02</div></div></div>
+        <div class="node-conn"><div class="nline" id="nln2"></div></div>
+        <div class="node-item"><div class="nc locked" id="nd3">🏛️</div><div class="nlbl" id="nl3">Enrollment<div class="nphase">Phase 03</div></div></div>
+        <div class="node-conn"><div class="nline" id="nln3"></div></div>
+        <div class="node-item"><div class="nc locked" id="nd4">📚</div><div class="nlbl" id="nl4">Learning<div class="nphase">Phase 04</div></div></div>
+        <div class="node-conn"><div class="nline" id="nln4"></div></div>
+        <div class="node-item"><div class="nc locked" id="nd5">🚀</div><div class="nlbl" id="nl5">Success<div class="nphase">Phase 05</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phases-wrap">
+    <!-- PHASE 1 -->
+    <div class="pp unlocked ap" id="phase1">
+      <div class="ph-hdr">
+        <div class="ph-icon">🔍</div>
+        <div><div class="ph-tag">Phase 01</div><div class="ph-tit">Discovery — Your Academic Profile</div></div>
+        <div class="ph-chk">✓</div>
+      </div>
+      <div class="ph-body">
+        <div class="fgrid">
+          <div class="fg">
+            <label class="fl" for="f-stream">Academic Stream</label>
+            <select class="fsel" id="f-stream">
+              <option value="">— Select your stream —</option>
+              <option value="sci-pcm">Science (PCM)</option>
+              <option value="sci-pcb">Science (PCB)</option>
+              <option value="commerce">Commerce</option>
+              <option value="arts">Arts / Humanities</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl" for="f-status">Current Status</label>
+            <select class="fsel" id="f-status">
+              <option value="">— Select status —</option>
+              <option value="s12">Studying in 12th</option>
+              <option value="d12">Completed 12th</option>
+              <option value="grad">Graduated (UG)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Marks / Percentage</label>
+            <div class="marks-wrap">
+              <input class="finp" id="f-marks" type="number" min="30" max="100" placeholder="e.g. 87" style="flex:1">
+              <div class="mbadge" id="mb">—</div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-pr" id="gen-btn" onclick="generatePath()"><span class="bic">✦</span> Generate My Path</button>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="pp" id="phase2">
+      <div class="ph-hdr">
+        <div class="ph-icon">🗺️</div>
+        <div><div class="ph-tag">Phase 02</div><div class="ph-tit">Planning — Smart Recommendations</div></div>
+        <div class="ph-chk">✓</div>
+      </div>
+      <div class="ph-body">
+        <div class="bridge-panel" id="bridge-panel">
+          <div class="bridge-hdr">
+            <div class="bridge-ico">🌉</div>
+            <div><div class="bridge-ttl">Bridge to AI &amp; Technology</div><div class="bridge-sub">Special pathways for your stream to enter the tech world</div></div>
+          </div>
+          <div class="cgrid" id="bridge-courses"></div>
+        </div>
+        <div class="cslbl" id="main-lbl">Recommended Programmes</div>
+        <div class="cgrid" id="main-courses"></div>
+        <div class="hidden mt16 flex-row" id="p2-next">
+          <button class="btn btn-cy" onclick="showComparison()"><span class="bic">📊</span> View College Comparison</button>
+          <button class="btn btn-se btn-sm" onclick="resetCourse()">Change Selection</button>
+        </div>
+        <div class="budget-tool">
+          <div class="budget-hdr">
+            <div class="budget-ttl">💰 Budget Planner</div>
+            <div class="budget-disp" id="bval">₹3 Lakhs / yr</div>
+          </div>
+          <input type="range" class="budget-range" id="brange" min="1" max="20" value="3" oninput="updBudget(this.value)">
+          <div class="budget-marks"><span>₹1L</span><span>₹5L</span><span>₹10L</span><span>₹15L</span><span>₹20L+</span></div>
+          <div class="cslbl" style="margin-top:18px">Typical Timeline</div>
+          <div class="tl-row">
+            <div class="tl-step"><div class="tl-n">1</div><div><div class="tl-tx">Entrance Prep</div><div class="tl-dur">3–6 months</div></div></div>
+            <div class="tl-step"><div class="tl-n">2</div><div><div class="tl-tx">Applications</div><div class="tl-dur">1–2 months</div></div></div>
+            <div class="tl-step"><div class="tl-n">3</div><div><div class="tl-tx">Admission</div><div class="tl-dur">1 month</div></div></div>
+            <div class="tl-step"><div class="tl-n">4</div><div><div class="tl-tx">Course Duration</div><div class="tl-dur" id="tl-dur">3–4 years</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="pp" id="phase3">
+      <div class="ph-hdr">
+        <div class="ph-icon">🏛️</div>
+        <div><div class="ph-tag">Phase 03</div><div class="ph-tit">Enrollment — Institute Comparison Dashboard</div></div>
+        <div class="ph-chk">✓</div>
+      </div>
+      <div class="ph-body">
+        <div class="chart-meta">
+          <div class="chart-for">Comparing institutes for:</div>
+          <div class="chart-chip" id="chart-chip">—</div>
+          <div class="sort-ctrls">
+            <span class="sort-lbl">Sort by:</span>
+            <button class="sb active" id="sb-r" onclick="sortBy('rating')">Rating</button>
+            <button class="sb" id="sb-f" onclick="sortBy('fee')">Fee ↑</button>
+            <button class="sb" id="sb-p" onclick="sortBy('placement')">Placement</button>
+          </div>
+        </div>
+        <div class="tw">
+          <table class="ct">
+            <thead><tr>
+              <th>Institute</th><th>Annual Fee</th><th>Rating</th>
+              <th>Placement</th><th>Campus</th><th>Student Feedback</th>
+            </tr></thead>
+            <tbody id="ctbody"></tbody>
+          </table>
+        </div>
+        <div class="mt16 flex-row">
+          <button class="btn btn-pr" onclick="advance45()"><span class="bic">→</span> Proceed to Learning Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="pp" id="phase4">
+      <div class="ph-hdr">
+        <div class="ph-icon">📚</div>
+        <div><div class="ph-tag">Phase 04</div><div class="ph-tit">Learning — AI Study Buddy</div></div>
+        <div class="ph-chk">✓</div>
+      </div>
+      <div class="ph-body">
+        <p style="color:var(--t500);font-size:.88rem;margin-bottom:18px">Your personalised AI learning companion — verbal practice, written prep, and adaptive study plans.</p>
+        <div class="ai-wrap">
+          <div class="ai-mod"><div class="ai-ico">🎤</div><div class="ai-tit">Verbal Practice Studio</div><p class="ai-desc">Real-time interview simulation, GD practice, and communication coaching with instant AI feedback.</p><span class="ai-soon">Coming Q3 2025</span></div>
+          <div class="ai-mod"><div class="ai-ico">✍️</div><div class="ai-tit">Written Prep Engine</div><p class="ai-desc">Essay grading, SOP building, and entrance exam preparation tailored to your targets.</p><span class="ai-soon">Coming Q3 2025</span></div>
+          <div class="ai-mod"><div class="ai-ico">👁️</div><div class="ai-tit">Focus &amp; Attention AI</div><p class="ai-desc">Webcam-based focus detection keeps you on track during study sessions.</p><span class="ai-soon">Coming Q4 2025</span></div>
+          <div class="ai-mod"><div class="ai-ico">🧠</div><div class="ai-tit">Adaptive Tutor</div><p class="ai-desc">Subject-specific AI that reshapes your daily curriculum based on performance patterns.</p><span class="ai-soon">Coming Q4 2025</span></div>
+        </div>
+        <!-- FUTURE AI SERVICES HERE — mount additional modules into #ai-module-mount -->
+        <div id="ai-module-mount"></div>
+      </div>
+    </div>
+
+    <!-- PHASE 5 -->
+    <div class="pp" id="phase5">
+      <div class="ph-hdr">
+        <div class="ph-icon">🚀</div>
+        <div><div class="ph-tag">Phase 05</div><div class="ph-tit">Success — Career Launchpad</div></div>
+        <div class="ph-chk">✓</div>
+      </div>
+      <div class="ph-body">
+        <p style="color:var(--t500);font-size:.88rem;margin-bottom:18px">From offer letters to career growth — tools to help you land, thrive, and lead.</p>
+        <div class="ai-wrap">
+          <div class="ai-mod"><div class="ai-ico">📄</div><div class="ai-tit">Smart Resume Builder</div><p class="ai-desc">AI-crafted, ATS-optimised resumes with role-specific templates and one-click tailoring.</p><span class="ai-soon">Coming Q3 2025</span></div>
+          <div class="ai-mod"><div class="ai-ico">🤝</div><div class="ai-tit">Interview Simulator</div><p class="ai-desc">Company-specific mock interviews with real-time feedback on content, tone, and confidence.</p><span class="ai-soon">Coming Q3 2025</span></div>
+          <div class="ai-mod"><div class="ai-ico">🌐</div><div class="ai-tit">Alumni Network</div><p class="ai-desc">Connect with EduBuddy alumni at your target companies for referrals and mentoring.</p><span class="ai-soon">Coming Q4 2025</span></div>
+          <div class="ai-mod"><div class="ai-ico">📈</div><div class="ai-tit">Career Trajectory Planner</div><p class="ai-desc">AI-mapped 5-year career growth plan with salary benchmarks and skill milestones.</p><span class="ai-soon">Coming Q4 2025</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-brand">
+    <div class="nav-lm" style="width:26px;height:26px;font-size:.7rem">EB</div>
+    <div class="ft-nm">Edu<span>Buddy</span> AI</div>
+  </div>
+  <div class="ft-copy">© 2025 EduBuddy AI Inc. — Career Pathfinder Platform</div>
+</footer>
+
+<script>
+"use strict";
+window.__EduBuddySession={stream:null,status:null,marks:null,selectedCourse:null,colleges:null,phase:1};
+
+const COURSES={
+  "sci-pcm":{main:[
+    {id:"cs-ai",ico:"🤖",nm:"B.Tech – AI & Machine Learning",mt:"4 yrs · JEE",b:"hot",dur:"4 years"},
+    {id:"cs",ico:"💻",nm:"B.Tech – Computer Science",mt:"4 yrs · JEE",b:"hot",dur:"4 years"},
+    {id:"ds",ico:"📊",nm:"B.Sc – Data Science",mt:"3 yrs · Merit",b:"tr",dur:"3 years"},
+    {id:"mech",ico:"⚙️",nm:"B.Tech – Mechanical Engg",mt:"4 yrs · JEE",b:"",dur:"4 years"}
+  ],bridge:[]},
+  "sci-pcb":{main:[
+    {id:"mbbs",ico:"🩺",nm:"MBBS",mt:"5.5 yrs · NEET",b:"",dur:"5.5 years"},
+    {id:"bpharma",ico:"💊",nm:"B.Pharma",mt:"4 yrs · Merit",b:"tr",dur:"4 years"},
+    {id:"biotech",ico:"🧬",nm:"B.Tech – Biotechnology",mt:"4 yrs · JEE",b:"nw",dur:"4 years"},
+    {id:"bioinf",ico:"🔬",nm:"B.Sc – Bioinformatics",mt:"3 yrs · Merit",b:"tr",dur:"3 years"}
+  ],bridge:[]},
+  "commerce":{main:[
+    {id:"bba",ico:"💼",nm:"BBA – Business Administration",mt:"3 yrs · Merit",b:"tr",dur:"3 years"},
+    {id:"bcom",ico:"📋",nm:"B.Com – Accounting & Finance",mt:"3 yrs · Merit",b:"",dur:"3 years"},
+    {id:"ca",ico:"📁",nm:"CA (Chartered Accountant)",mt:"~5 yrs · ICAI",b:"",dur:"5 years"},
+    {id:"fintech",ico:"💳",nm:"BBA – FinTech",mt:"3 yrs · Merit",b:"hot",dur:"3 years"}
+  ],bridge:[
+    {id:"ai-biz",ico:"🤝",nm:"AI for Business",mt:"PG Cert · 1 yr",b:"br",dur:"1 year"},
+    {id:"dig-mkt",ico:"📣",nm:"Digital Marketing & Analytics",mt:"Diploma · 6 mo",b:"br",dur:"6 months"},
+    {id:"data-an",ico:"📊",nm:"Business Data Analytics",mt:"PG Cert · 1 yr",b:"br",dur:"1 year"}
+  ]},
+  "arts":{main:[
+    {id:"ba-llb",ico:"⚖️",nm:"BA LLB (Law)",mt:"5 yrs · CLAT",b:"",dur:"5 years"},
+    {id:"psych",ico:"🧠",nm:"BA – Psychology",mt:"3 yrs · Merit",b:"tr",dur:"3 years"},
+    {id:"media",ico:"🎬",nm:"BA – Mass Communication",mt:"3 yrs · Merit",b:"",dur:"3 years"},
+    {id:"design",ico:"🎨",nm:"B.Des – UX/Visual Design",mt:"4 yrs · NID/NIFT",b:"nw",dur:"4 years"}
+  ],bridge:[
+    {id:"dgt-cr",ico:"🖥️",nm:"Digital Creative Technology",mt:"Diploma · 1 yr",b:"br",dur:"1 year"},
+    {id:"ux-ai",ico:"✨",nm:"UX Design + AI Tools",mt:"PG Cert · 8 mo",b:"br",dur:"8 months"},
+    {id:"cont-cr",ico:"📱",nm:"Content & Social Media Strategy",mt:"Diploma · 6 mo",b:"br",dur:"6 months"}
+  ]}
+};
+
+function getCols(){return[
+  {n:"IIT Delhi",loc:"New Delhi",fee:270000,rat:4.9,pl:97,campus:"Residential",fb:"Outstanding research culture"},
+  {n:"BITS Pilani",loc:"Rajasthan",fee:480000,rat:4.7,pl:95,campus:"Residential",fb:"Best peer learning environment"},
+  {n:"VIT Vellore",loc:"Tamil Nadu",fee:220000,rat:4.4,pl:88,campus:"Semi-Res",fb:"Great MNC placement support"},
+  {n:"SRM Institute",loc:"Chennai",fee:175000,rat:4.1,pl:82,campus:"Residential",fb:"Active clubs and good infra"},
+  {n:"Manipal University",loc:"Karnataka",fee:320000,rat:4.3,pl:85,campus:"Residential",fb:"Strong alumni network"},
+  {n:"NMIMS Mumbai",loc:"Mumbai",fee:550000,rat:4.6,pl:91,campus:"Day Scholar",fb:"Excellent industry connections"},
+  {n:"Christ University",loc:"Bangalore",fee:150000,rat:4.0,pl:78,campus:"Semi-Res",fb:"Supportive faculty, good exposure"}
+];}
+
+let selId=null,selNm=null,selDur=null,curSort="rating",colleges=[];
+
+document.getElementById("f-marks").addEventListener("input",function(){
+  const v=parseInt(this.value),b=document.getElementById("mb");
+  if(v>=30&&v<=100){
+    b.textContent=v+"%";
+    b.style.color=v>=85?"var(--green)":v>=60?"var(--blue)":"var(--amber)";
+    b.style.borderColor=v>=85?"#86efac":v>=60?"var(--blue-mid)":"#fde68a";
+    b.style.background=v>=85?"var(--green-bg)":v>=60?"var(--blue-bg)":"var(--amber-bg)";
+  }else{b.textContent="—";b.style.color="var(--blue)"}
+});
+
+function updBudget(v){
+  document.getElementById("bval").textContent=v>=20?"₹20 Lakhs+":"₹"+v+" Lakh"+(v>1?"s":"")+" / yr";
+  const p=((v-1)/19)*100;
+  document.getElementById("brange").style.background=
+    "linear-gradient(90deg,var(--blue) 0%,var(--blue) "+p+"%,var(--border2) "+p+"%,var(--border2) 100%)";
+}
+
+function generatePath(){
+  const stream=document.getElementById("f-stream").value;
+  const status=document.getElementById("f-status").value;
+  const marks=document.getElementById("f-marks").value;
+  if(!stream||!status||!marks){shake("gen-btn");return;}
+  Object.assign(window.__EduBuddySession,{stream,status,marks:parseInt(marks),phase:2});
+  const d=COURSES[stream]||COURSES["sci-pcm"];
+  const hasBridge=(stream==="commerce"||stream==="arts")&&d.bridge.length>0;
+  const bp=document.getElementById("bridge-panel");
+  if(hasBridge){bp.classList.add("show");document.getElementById("bridge-courses").innerHTML=d.bridge.map(rCard).join("");}
+  else{bp.classList.remove("show");}
+  document.getElementById("main-lbl").textContent=hasBridge?"Core Programmes for Your Stream":"Recommended Programmes";
+  document.getElementById("main-courses").innerHTML=d.main.map(rCard).join("");
+  nodeDone(1);nodeActive(2);lineDone(1);
+  document.getElementById("phase1").classList.add("completed");
+  document.getElementById("phase1").classList.remove("ap");
+  unlockPanel("phase2");scrollTo("phase2");
+}
+
+function rCard(c){
+  const bmap={hot:"b-hot",tr:"b-tr",nw:"b-nw",br:"b-br"};
+  const btxt={hot:"🔥 High Demand",tr:"↑ Trending",nw:"✦ New",br:"🌉 Bridge Course"};
+  const bh=c.b?`<span class="cbadge ${bmap[c.b]||''}">${btxt[c.b]||''}</span>`:"";
+  return`<div class="cc" id="cc-${c.id}" onclick="selCourse('${c.id}','${c.nm.replace(/'/g,"\\'")}','${c.dur}')"><div class="cc-ico">${c.ico}</div><div class="cc-nm">${c.nm}</div><div class="cc-mt">${c.mt}</div>${bh}</div>`;
+}
+
+function selCourse(id,nm,dur){
+  document.querySelectorAll(".cc").forEach(c=>c.classList.remove("sel"));
+  document.getElementById("cc-"+id)?.classList.add("sel");
+  selId=id;selNm=nm;selDur=dur;
+  window.__EduBuddySession.selectedCourse={id,nm,dur};
+  document.getElementById("tl-dur").textContent=dur;
+  const nx=document.getElementById("p2-next");
+  nx.classList.remove("hidden");nx.classList.add("aup");
+  document.getElementById("phase2").classList.add("completed");
+}
+
+function resetCourse(){
+  document.querySelectorAll(".cc").forEach(c=>c.classList.remove("sel"));
+  selId=null;document.getElementById("p2-next").classList.add("hidden");
+  document.getElementById("phase2").classList.remove("completed");
+}
+
+function showComparison(){
+  if(!selId)return;
+  colleges=getCols();window.__EduBuddySession.colleges=colleges;
+  document.getElementById("chart-chip").textContent=selNm;
+  renderTable(curSort);
+  nodeDone(2);nodeActive(3);lineDone(2);
+  unlockPanel("phase3");
+  document.getElementById("phase2").classList.remove("ap");
+  document.getElementById("phase3").classList.add("completed");
+  scrollTo("phase3");
+}
+
+function renderTable(sort){
+  const data=[...colleges].sort((a,b)=>sort==="fee"?a.fee-b.fee:sort==="placement"?b.pl-a.pl:b.rat-a.rat);
+  document.getElementById("ctbody").innerHTML=data.map((c,i)=>{
+    const stars="★".repeat(Math.floor(c.rat))+(c.rat%1>=.5?"½":"")+"☆".repeat(5-Math.floor(c.rat)-(c.rat%1>=.5?1:0));
+    const plc=c.pl>=90?"var(--green)":c.pl>=80?"var(--blue)":"var(--amber)";
+    const fee="₹"+(c.fee>=100000?(c.fee/100000).toFixed(1)+"L":c.fee.toLocaleString());
+    const best=i===0?'<span class="best-chp">✓ Best Match</span>':"";
+    return`<tr class="${i===0?"br":""}">
+      <td><div class="in-nm">${c.n}${best}</div><div class="in-loc">📍 ${c.loc}</div></td>
+      <td><div class="fee-v">${fee}/yr</div><div class="fee-s">~${(c.fee*4/100000).toFixed(1)}L total</div></td>
+      <td><div class="star-row"><span class="stars">${stars}</span><span class="rv">${c.rat}</span></div></td>
+      <td><div class="plw"><div class="plt"><div class="plf" style="width:${c.pl}%;background:${plc}"></div></div><span class="plv">${c.pl}%</span></div></td>
+      <td><span class="campus-chip">${c.campus}</span></td>
+      <td><div class="fb-cell">"${c.fb}"</div></td>
+    </tr>`;
+  }).join("");
+}
+
+function sortBy(f){
+  curSort=f;
+  ["r","f","p"].forEach(k=>document.getElementById("sb-"+k)?.classList.remove("active"));
+  document.getElementById("sb-"+f[0])?.classList.add("active");
+  renderTable(f);
+}
+
+function advance45(){
+  nodeDone(3);nodeActive(4);lineDone(3);
+  unlockPanel("phase4");
+  document.getElementById("phase3").classList.remove("ap");
+  scrollTo("phase4");
+  setTimeout(()=>{nodeDone(4);nodeActive(5);lineDone(4);unlockPanel("phase5");},400);
+  window.__EduBuddySession.phase=5;
+}
+
+function nodeDone(n){
+  const nd=document.getElementById("nd"+n),nl=document.getElementById("nl"+n);
+  nd.className="nc done";nd.innerHTML="✓";nl.className="nlbl done";
+}
+function nodeActive(n){
+  const nd=document.getElementById("nd"+n),nl=document.getElementById("nl"+n);
+  nd.className="nc active";nl.className="nlbl active";
+}
+function lineDone(n){const l=document.getElementById("nln"+n);if(l)l.classList.add("done");}
+function unlockPanel(id){const el=document.getElementById(id);el.classList.add("unlocked","ap","aup");}
+function scrollTo(id){setTimeout(()=>document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"nearest"}),110);}
+function shake(id){
+  const el=document.getElementById(id);
+  ["-6px","6px","-4px","4px","0"].forEach((v,i)=>setTimeout(()=>el.style.transform="translateX("+v+")",i*70));
+}
+</script>
+</body>
+</html>
